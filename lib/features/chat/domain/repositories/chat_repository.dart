@@ -1,11 +1,11 @@
-import '../../data/models/chat_request_model.dart';
-import '../../data/models/chat_response_model.dart';
-import '../../data/models/chat_stream_event_model.dart';
+import 'package:dartz/dartz.dart';
 
-/// Sends chat turns to Gemini. Stateless: the caller owns the interaction id
-/// (take it from [ChatResponse.id] / [InteractionCreatedEvent.interactionId])
-/// and passes it back as [ChatRequest.previousInteractionId].
+import '../../../../core/errors/failure.dart';
+import '../entities/chat_reply.dart';
+
 abstract interface class ChatRepository {
-  Future<ChatResponse> send(ChatRequest request);
-  Stream<ChatStreamEvent> stream(ChatRequest request);
+  Future<Either<Failure, ChatReply>> sendMessage({
+    required String message,
+    String? previousInteractionId,
+  });
 }
