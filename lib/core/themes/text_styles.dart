@@ -33,6 +33,12 @@ abstract final class TextStyles {
     color: ColorsManager.botBubbleBodyText,
   );
 
+  static const TextStyle inputText = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w700,
+    color: ColorsManager.botBubbleText,
+  );
+
   static const TextStyle inputHint = TextStyle(
     fontSize: 13,
     fontWeight: FontWeight.w700,

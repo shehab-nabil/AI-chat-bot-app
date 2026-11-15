@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/themes/colors_manager.dart';
 import '../../../../core/themes/text_styles.dart';
+import '../cubit/chat_cubit.dart';
 
-class ChatInputBar extends StatelessWidget {
+class ChatInputBar extends StatefulWidget {
   const ChatInputBar({super.key});
+
+  @override
+  State<ChatInputBar> createState() => _ChatInputBarState();
+}
+
+class _ChatInputBarState extends State<ChatInputBar> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _send() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    context.read<ChatCubit>().sendMessage(text);
+    _controller.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +47,18 @@ class ChatInputBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Expanded(
-            child: Text('Write your message', style: TextStyles.inputHint),
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              style: TextStyles.inputText,
+              cursorColor: ColorsManager.primary,
+              decoration: const InputDecoration(
+                hintText: 'Write your message',
+                hintStyle: TextStyles.inputHint,
+                border: InputBorder.none,
+                isCollapsed: true,
+              ),
+            ),
           ),
           SvgPicture.asset(
             'assets/icons/microphone.svg',
@@ -34,7 +66,15 @@ class ChatInputBar extends StatelessWidget {
             height: 24,
           ),
           const SizedBox(width: 7),
-          SvgPicture.asset('assets/icons/send.svg', width: 24, height: 24),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: _send,
+            child: SvgPicture.asset(
+              'assets/icons/send.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
         ],
       ),
     );
